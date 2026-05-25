@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/api';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { Calendar, Clock, Video, MapPin, XCircle } from 'lucide-react';
+import { Calendar, Clock, Video, MapPin, XCircle, RefreshCw } from 'lucide-react';
 
 const PatientDashboard = () => {
   const { user } = useAuth();
@@ -42,6 +42,13 @@ const PatientDashboard = () => {
         alert(error.response?.data?.message || 'Failed to cancel appointment');
       }
     }
+  };
+
+  const isWithin15Days = (dateStr) => {
+    const appointmentDate = new Date(dateStr);
+    const today = new Date();
+    const diffInDays = Math.floor((today - appointmentDate) / (1000 * 60 * 60 * 24));
+    return diffInDays >= 0 && diffInDays <= 15;
   };
 
   const getStatusBadge = (status) => {
@@ -122,6 +129,22 @@ const PatientDashboard = () => {
                   <button onClick={() => handleCancel(appt.id)} className="btn btn-outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)', padding: '0.5rem 1rem' }}>
                     <XCircle size={16} /> Cancel
                   </button>
+                </div>
+              )}
+
+              {/* Follow-Up Button for completed appointments within 15 days */}
+              {appt.status === 'COMPLETED' && isWithin15Days(appt.appointmentDate) && (
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '0.5rem' }}>
+                  <div style={{ background: 'linear-gradient(135deg, #e8f8f0, #d1fae5)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--success)', fontWeight: 500 }}>
+                    🎉 Free follow-up available for 15 days from your last visit
+                  </div>
+                  <Link 
+                    to={`/patient/book/${appt.doctor.id}`} 
+                    className="btn btn-primary w-full"
+                    style={{ background: 'var(--success)', padding: '0.75rem' }}
+                  >
+                    <RefreshCw size={16} /> Book Follow-Up Appointment (Free)
+                  </Link>
                 </div>
               )}
             </div>

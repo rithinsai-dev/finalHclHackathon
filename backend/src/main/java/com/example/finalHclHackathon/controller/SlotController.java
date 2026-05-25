@@ -56,6 +56,14 @@ public class SlotController {
         List<Slot> slots;
         if (status == SlotStatus.AVAILABLE) {
             slots = slotService.getAvailableSlots(doctorId, date);
+            
+            // Filter out past time slots if the date is today
+            if (date.isEqual(LocalDate.now())) {
+                java.time.LocalTime now = java.time.LocalTime.now();
+                slots = slots.stream()
+                    .filter(slot -> slot.getStartTime().isAfter(now))
+                    .collect(java.util.stream.Collectors.toList());
+            }
         } else {
             slots = slotService.getSlotsByDoctorAndDate(doctorId, date);
         }

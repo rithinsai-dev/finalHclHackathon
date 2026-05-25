@@ -1,32 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #FF6B6B;          /* Coral */
-  --primary-light: #FFE0E0;    /* Light pink */
-  --primary-hover: #fa5c5c;
+  --primary: #2563EB;          /* Royal Blue */
+  --primary-light: #EFF6FF;    /* Very light blue */
+  --primary-hover: #1D4ED8;
   
-  --accent: #4ECDC4;           /* Teal */
-  --accent-light: #E0FAF7;     /* Mint */
-  --accent-hover: #45b8b0;
+  --accent: #3B82F6;           /* Bright Blue */
+  --accent-light: #DBEAFE;     /* Light blue */
+  --accent-hover: #2563EB;
   
-  --warning: #FFE66D;          /* Sunny yellow */
-  --success: #2ECC71;          /* Green */
-  --danger: #FF4757;           /* Bright red */
+  --warning: #F59E0B;          /* Amber */
+  --success: #10B981;          /* Emerald */
+  --danger: #EF4444;           /* Red */
   
-  --bg: #FFF9F5;               /* Warm white */
+  --bg: #F8FAFC;               /* Cool white / Slate */
   --card: #FFFFFF;
-  --card-hover: #F8F9FA;
+  --card-hover: #F1F5F9;
   
-  --text: #2D3436;             /* Charcoal */
-  --text-light: #636E72;       /* Gray */
-  --text-muted: #B2BEC3;
+  --text: #0F172A;             /* Slate 900 */
+  --text-light: #475569;       /* Slate 600 */
+  --text-muted: #94A3B8;       /* Slate 400 */
   
-  --border: #DFE6E9;
+  --border: #E2E8F0;           /* Slate 200 */
   
-  --gradient: linear-gradient(135deg, #FF6B6B, #FFE66D);
-  --shadow-sm: 0 2px 8px rgba(255, 107, 107, 0.08);
-  --shadow-md: 0 8px 24px rgba(255, 107, 107, 0.12);
-  --shadow-lg: 0 16px 32px rgba(255, 107, 107, 0.16);
+  --gradient: linear-gradient(135deg, #2563EB, #60A5FA);
+  --shadow-sm: 0 2px 8px rgba(37, 99, 235, 0.08);
+  --shadow-md: 0 8px 24px rgba(37, 99, 235, 0.12);
+  --shadow-lg: 0 16px 32px rgba(37, 99, 235, 0.16);
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -400,4 +400,46 @@ p {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Form Validation Styles */
+.form-control-error {
+  border-color: var(--danger) !important;
+  background-color: #fef2f2 !important;
+}
+
+.form-control-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+  border-color: var(--danger) !important;
+}
+
+.form-control-valid {
+  border-color: var(--success) !important;
+}
+
+.form-control-valid:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+  border-color: var(--success) !important;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--danger);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 0.35rem;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

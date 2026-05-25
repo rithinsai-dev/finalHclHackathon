@@ -41,6 +41,8 @@ public class AppointmentService {
     /**
      * Book an appointment.
      * Validates: slot is available, doctor is not on leave, slot belongs to the correct doctor.
+     * Blocks same-day duplicate bookings with the same doctor.
+     * Applies free follow-up if patient visited this doctor within 15 days.
      */
     @Transactional
     public Appointment bookAppointment(AppointmentRequest request) {
@@ -58,9 +60,26 @@ public class AppointmentService {
             throw new SlotNotAvailableException("This slot is already booked");
         }
 
+        // Block same-day duplicate booking with the same doctor
+        java.util.List<Appointment> sameDayAppointments = appointmentRepository
+                .findByPatientIdAndDoctorIdAndAppointmentDateAndStatusNot(
+                        patient.getId(), doctor.getId(), slot.getDate(), AppointmentStatus.CANCELLED);
+        if (!sameDayAppointments.isEmpty()) {
+            throw new InvalidOperationException(
+                    "You already have an appointment with Dr. " + doctor.getName() + " on " + slot.getDate() +
+                    ". Please choose a different date.");
+        }
+
         // Check doctor is not on leave
         if (!leaveRequestRepository.findApprovedLeavesForDoctorOnDate(doctor.getId(), slot.getDate()).isEmpty()) {
             throw new InvalidOperationException("Doctor is on leave on " + slot.getDate());
+        }
+
+        // Determine fee: free follow-up if visited same doctor within 15 days of the slot date
+        double fee = doctor.getConsultationFee();
+        boolean isFollowUp = isEligibleForFollowUp(patient.getId(), doctor.getId(), slot.getDate());
+        if (isFollowUp) {
+            fee = 0.0;
         }
 
         // Create the appointment
@@ -72,7 +91,7 @@ public class AppointmentService {
         appointment.setStartTime(slot.getStartTime());
         appointment.setMode(doctor.getMode());
         appointment.setStatus(AppointmentStatus.CONFIRMED);
-        appointment.setFee(doctor.getConsultationFee());
+        appointment.setFee(fee);
         appointment.setDescription(request.getDescription()); // optional patient problem description
 
         // Set meeting link for online appointments
@@ -84,6 +103,23 @@ public class AppointmentService {
         slotService.markSlotBooked(slot);
 
         return appointmentRepository.save(appointment);
+    }
+
+    /**
+     * Check if a patient is eligible for a free follow-up with a doctor on a specific date.
+     * Eligible ONLY if the patient had a COMPLETED appointment with this doctor
+     * within 15 days PRIOR to the new appointment date.
+     */
+    public boolean isEligibleForFollowUp(Long patientId, Long doctorId, java.time.LocalDate newAppointmentDate) {
+        java.time.LocalDate sinceDate = newAppointmentDate.minusDays(15);
+        java.util.List<Appointment> completedAppointments =
+                appointmentRepository.findByPatientIdAndDoctorIdAndStatusAndAppointmentDateGreaterThanEqual(
+                        patientId, doctorId, AppointmentStatus.COMPLETED, sinceDate);
+        
+        // Ensure the completed appointment is strictly BEFORE or ON the new appointment date
+        // and not in the future relative to the new date.
+        return completedAppointments.stream()
+                .anyMatch(a -> !a.getAppointmentDate().isAfter(newAppointmentDate));
     }
 
     /**

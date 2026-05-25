@@ -65,4 +65,21 @@ public class AppointmentController {
         Appointment appointment = appointmentService.markNoShow(id);
         return ResponseEntity.ok(ApiResponse.success("Appointment marked as no-show", appointment));
     }
+
+    /**
+     * Check if a patient is eligible for a free follow-up appointment with a doctor.
+     */
+    @GetMapping("/follow-up-check")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> checkFollowUpEligibility(
+            @RequestParam Long patientId,
+            @RequestParam Long doctorId,
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date) {
+        boolean eligible = appointmentService.isEligibleForFollowUp(patientId, doctorId, date);
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        result.put("eligible", eligible);
+        result.put("message", eligible
+                ? "You are eligible for a free follow-up appointment on this date (within 15 days of your last visit)."
+                : "Standard consultation fee applies.");
+        return ResponseEntity.ok(ApiResponse.success("Follow-up eligibility checked", result));
+    }
 }
