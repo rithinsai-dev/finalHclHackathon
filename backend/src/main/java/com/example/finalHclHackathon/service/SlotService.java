@@ -36,7 +36,7 @@ public class SlotService {
     @Value("${slot.lunch-end-hour:14}")
     private int lunchEndHour;
 
-    @Value("${slot.duration-minutes:30}")
+    @Value("${slot.duration-minutes:59}")
     private int durationMinutes;
 
     public SlotService(SlotRepository slotRepository, DoctorRepository doctorRepository,

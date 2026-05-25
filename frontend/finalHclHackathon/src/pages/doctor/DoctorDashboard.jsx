@@ -85,7 +85,7 @@ const DoctorDashboard = () => {
                   </td>
                   <td>
                     {appt.status === 'CONFIRMED' && (
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap items-center">
                         <button 
                           onClick={() => handleUpdateStatus(appt.id, 'COMPLETED')}
                           className="btn btn-outline" 
@@ -100,6 +100,17 @@ const DoctorDashboard = () => {
                         >
                           <XCircle size={14} /> No Show
                         </button>
+                        {appt.mode === 'ONLINE' && appt.meetingLink && (
+                          <a 
+                            href={appt.meetingLink} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            className="btn btn-primary" 
+                            style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem' }}
+                          >
+                            Join Meeting
+                          </a>
+                        )}
                       </div>
                     )}
                   </td>

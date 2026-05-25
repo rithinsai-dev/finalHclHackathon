@@ -14,7 +14,7 @@ const Navbar = () => {
   const getDashboardLink = () => {
     if (!user) return '/login';
     switch (user.role) {
-      case 'ADMIN': return '/admin/doctors';
+      case 'ADMIN': return '/admin';
       case 'DOCTOR': return '/doctor';
       case 'PATIENT': return '/patient';
       default: return '/login';
@@ -37,6 +37,7 @@ const Navbar = () => {
           )}
           {user.role === 'ADMIN' && (
             <>
+              <Link to="/admin" className="nav-link">Dashboard</Link>
               <Link to="/admin/doctors" className="nav-link">Doctors</Link>
               <Link to="/admin/leaves" className="nav-link">Leaves</Link>
             </>

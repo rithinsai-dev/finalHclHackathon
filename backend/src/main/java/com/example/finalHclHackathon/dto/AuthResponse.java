@@ -8,7 +8,7 @@ public class AuthResponse {
     private Role role;
     private String name;
     private String email;
-    private Long entityId; // doctorId or patientId (null for admin)
+    private Long entityId; 
 
     public AuthResponse() {}
 
@@ -20,7 +20,6 @@ public class AuthResponse {
         this.entityId = entityId;
     }
 
-    // Getters and Setters
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
 

@@ -75,7 +75,6 @@ public class DataSeeder implements CommandLineRunner {
                 specialty.setName(specName);
                 specialty = specialtyRepository.save(specialty);
 
-                // Create Online Doctor (Male)
                 String mFirst = southIndianFirstNamesMale.get(maleIdx % southIndianFirstNamesMale.size());
                 String mLastName = southIndianLastNames.get(lastIdx % southIndianLastNames.size());
                 String mName = mFirst + " " + mLastName;
@@ -102,7 +101,6 @@ public class DataSeeder implements CommandLineRunner {
                 maleIdx++;
                 lastIdx++;
 
-                // Create Offline Doctor (Female)
                 String fFirst = southIndianFirstNamesFemale.get(femaleIdx % southIndianFirstNamesFemale.size());
                 String fLastName = southIndianLastNames.get(lastIdx % southIndianLastNames.size());
                 String fName = fFirst + " " + fLastName;

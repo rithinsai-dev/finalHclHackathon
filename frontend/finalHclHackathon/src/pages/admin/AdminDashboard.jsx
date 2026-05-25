@@ -69,7 +69,9 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p style={{ margin: 0, color: 'var(--text-light)', fontSize: '0.9rem' }}>Online Appts</p>
-                  <h2 style={{ margin: 0 }}>{summary.appointmentsByMode.ONLINE || 0}</h2>
+                  <h2 style={{ margin: 0 }}>
+                    {Object.values(summary.bySpecialty || {}).reduce((acc, curr) => acc + curr.onlineCount, 0)}
+                  </h2>
                 </div>
               </div>
             </div>
@@ -81,7 +83,9 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p style={{ margin: 0, color: 'var(--text-light)', fontSize: '0.9rem' }}>Offline Appts</p>
-                  <h2 style={{ margin: 0 }}>{summary.appointmentsByMode.OFFLINE || 0}</h2>
+                  <h2 style={{ margin: 0 }}>
+                    {Object.values(summary.bySpecialty || {}).reduce((acc, curr) => acc + curr.offlineCount, 0)}
+                  </h2>
                 </div>
               </div>
             </div>
@@ -105,14 +109,14 @@ const AdminDashboard = () => {
               <div className="flex justify-around items-center" style={{ padding: '2rem 0' }}>
                 <div className="text-center">
                   <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--accent)' }}>
-                    Rs. {summary.revenueByMode.ONLINE || 0}
+                    Rs. {summary.onlineRevenue || 0}
                   </div>
                   <span className="badge badge-accent mt-2">ONLINE REVENUE</span>
                 </div>
                 <div style={{ width: '1px', height: '60px', background: 'var(--border)' }}></div>
                 <div className="text-center">
                   <div style={{ fontSize: '2rem', fontWeight: 700, color: '#e6b800' }}>
-                    Rs. {summary.revenueByMode.OFFLINE || 0}
+                    Rs. {summary.offlineRevenue || 0}
                   </div>
                   <span className="badge badge-warning mt-2">OFFLINE REVENUE</span>
                 </div>
@@ -121,14 +125,14 @@ const AdminDashboard = () => {
 
             <div className="card">
               <h4 className="mb-4" style={{ color: 'var(--text)' }}><Users size={18} className="inline mr-2 text-primary" /> Activity by Specialty</h4>
-              {Object.keys(summary.appointmentsBySpecialty).length === 0 ? (
+              {!summary.bySpecialty || Object.keys(summary.bySpecialty).length === 0 ? (
                 <p className="text-center text-muted" style={{ padding: '2rem 0' }}>No data for this date.</p>
               ) : (
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {Object.entries(summary.appointmentsBySpecialty).map(([spec, count]) => (
+                  {Object.entries(summary.bySpecialty).map(([spec, data]) => (
                     <li key={spec} className="flex justify-between items-center mb-3" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
                       <span style={{ fontWeight: 500 }}>{spec}</span>
-                      <span className="badge badge-primary">{count} appointments</span>
+                      <span className="badge badge-primary">{data.appointmentCount} appointments</span>
                     </li>
                   ))}
                 </ul>

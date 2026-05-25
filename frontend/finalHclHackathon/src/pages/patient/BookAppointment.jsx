@@ -75,7 +75,6 @@ const BookAppointment = () => {
       
       const response = await api.post('/appointments', payload);
       if (response.data.success) {
-        // Redirect to dashboard on success
         navigate('/patient');
       }
     } catch (error) {
