@@ -4,13 +4,15 @@ import com.example.finalHclHackathon.dto.PatientRequest;
 import com.example.finalHclHackathon.entity.Patient;
 import com.example.finalHclHackathon.exception.ResourceNotFoundException;
 import com.example.finalHclHackathon.repository.PatientRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PatientService {
-
+    
     private final PatientRepository patientRepository;
 
     public PatientService(PatientRepository patientRepository) {
